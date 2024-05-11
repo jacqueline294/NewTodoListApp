@@ -4,7 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.Instant
 import java.util.Date
-import java.util.Date.from
+
 
 
 data class Todo(
@@ -14,9 +14,12 @@ data class Todo(
 )
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun getFakeTodo(): List<Todo>{
     return listOf<Todo>(
-        Todo(1,"First todo", from(Instant.now()))
-    )
+        Todo(1,"First todo", Date.from(Instant.now())),
+        Todo(2,"Second todo", Date.from((Instant.now())))
+
+        );
 
 }
