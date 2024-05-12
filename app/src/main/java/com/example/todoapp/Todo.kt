@@ -13,13 +13,12 @@ data class Todo(
     var createdAt:Date
 )
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 fun getFakeTodo(): List<Todo>{
     return listOf<Todo>(
         Todo(1,"First todo", Date.from(Instant.now())),
         Todo(2,"Second todo", Date.from((Instant.now())))
 
-        );
+    );
 
 }
