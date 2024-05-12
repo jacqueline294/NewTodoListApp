@@ -1,33 +1,29 @@
 package com.example.todoapp
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.time.Instant
+
 
 class TodoViewModel : ViewModel(){
-    private var _todoList = MutableLiveData<List<Todo>>()
-    val todoList: LiveData<List<Todo>> = _todoList
+    val todoDao= MainApplication.todoDatabase.getTodoDao()
 
-    fun getAllTodo() {
-        _todoList.value = TodoManager.getAllTodo().reversed()
-    }
+    val todoList: LiveData<List<Todo>> = todoDao.getAllTodo()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun addTodo(title:String){
-
-        TodoManager.addTodo(title)
-        getAllTodo()
-
+        todoDao.addTodo(Todo(title = title, createdAt = java.util.Date.from(Instant.now())))
     }
 
     fun updateTodo(id: Int, title: String){
-        TodoManager.updateTodo(id, title)
-        getAllTodo()
+
 
     }
 
     fun deleteTodo(id: Int){
-        TodoManager.deleteTodo(id)
-        getAllTodo()
+        todoDao.deleteTodo(id)
 
     }
 
