@@ -6,9 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -68,17 +70,18 @@ fun TodoListPage(viewModel: TodoViewModel){
             LazyColumn(
                 content = {
                     itemsIndexed(it) { index: Int, item: Todo ->
-                        TodoItem(item = item, onDelete = {
-                            viewModel.deleteTodo(item.id)
-
-                        }, onEdit = {
-                            viewModel.updateTodo(item.id,inputText)
-                        }
+                        TodoItem(
+                            item = item,
+                            onDelete = { viewModel.deleteTodo(item.id) },
+                            onUpdate = { updatedTitle ->
+                                viewModel.updateTodo(item.id, updatedTitle)
+                            }
                         )
-
                     }
                 }
             )
+
+
         }?: Text(
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
@@ -93,14 +96,8 @@ fun TodoListPage(viewModel: TodoViewModel){
 
 
 @Composable
-fun TodoItem(
-    item: Todo,
-    onDelete: () -> Unit,
-    onEdit: (String) -> Unit // Change the signature to pass the edited text
-) {
-    var showDialog by remember { mutableStateOf(false) }
-    var editedText by remember { mutableStateOf(item.title) }
-
+fun TodoItem(item: Todo, onDelete: () -> Unit, onUpdate: (String) -> Unit) {
+    var showEditPopup by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -114,10 +111,7 @@ fun TodoItem(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = SimpleDateFormat(
-                    "HH:mm:aa, dd/MM/yyyy",
-                    Locale.ENGLISH
-                ).format(item.createdAt),
+                text = SimpleDateFormat("HH:mm:aa, dd/mm", Locale.ENGLISH).format(item.createdAt),
                 fontSize = 12.sp,
                 color = Color.LightGray
             )
@@ -127,13 +121,24 @@ fun TodoItem(
                 color = Color.White
             )
         }
-        IconButton(onClick = { showDialog = true }) {
+        IconButton(onClick = { showEditPopup = true }) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_edit_24),
                 contentDescription = "Edit",
                 tint = Color.White
             )
         }
+        if (showEditPopup) {
+            EditTaskPopup(
+                currentTitle = item.title,
+                onConfirm = { updatedTitle ->
+                    onUpdate(updatedTitle)
+                    showEditPopup = false // Close the popup after confirming
+                },
+                onDismiss = { showEditPopup = false }
+            )
+        }
+        Spacer(modifier = Modifier.width(8.dp))
         IconButton(onClick = onDelete) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_delete_24),
@@ -141,38 +146,5 @@ fun TodoItem(
                 tint = Color.White
             )
         }
-    }
-
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = {
-                Text(text = "Edit Task")
-            },
-            text = {
-                OutlinedTextField(
-                    value = editedText,
-                    onValueChange = { editedText = it },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        showDialog = false
-                        onEdit(editedText)
-                    }
-                ) {
-                    Text(text = "Save")
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = { showDialog = false }
-                ) {
-                    Text(text = "Cancel")
-                }
-            }
-        )
     }
 }
