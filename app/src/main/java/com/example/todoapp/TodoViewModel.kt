@@ -4,7 +4,11 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.Instant
+import java.util.Date
 
 
 class TodoViewModel : ViewModel(){
@@ -13,18 +17,25 @@ class TodoViewModel : ViewModel(){
     val todoList: LiveData<List<Todo>> = todoDao.getAllTodo()
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun addTodo(title:String){
-        todoDao.addTodo(Todo(title = title, createdAt = java.util.Date.from(Instant.now())))
+    fun addTodo(title:String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            todoDao.addTodo(Todo(title = title, createdAt = Date.from(Instant.now())))
+        }
     }
 
-    fun updateTodo(id: Int, title: String){
 
-
+    fun updateTodo(todo: Todo) {
+        viewModelScope.launch(Dispatchers.IO) {
+            todoDao.updateTodo(todo)
+        }
     }
 
     fun deleteTodo(id: Int){
+        viewModelScope.launch(Dispatchers.IO) {
         todoDao.deleteTodo(id)
 
     }
+    }
 
 }
+

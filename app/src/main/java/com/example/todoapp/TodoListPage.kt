@@ -74,7 +74,8 @@ fun TodoListPage(viewModel: TodoViewModel){
                             item = item,
                             onDelete = { viewModel.deleteTodo(item.id) },
                             onUpdate = { updatedTitle ->
-                                viewModel.updateTodo(item.id, updatedTitle)
+                                val updatedTodo = item.copy(title = updatedTitle)
+                                viewModel.updateTodo(updatedTodo)
                             }
                         )
                     }

@@ -1,5 +1,8 @@
 package com.example.todoapp
 
+
+
+
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.Entity
@@ -9,11 +12,12 @@ import java.util.Date
 
 
 @Entity
-data class Todo(
+data class Todo @RequiresApi(Build.VERSION_CODES.O) constructor(
     @PrimaryKey(autoGenerate = true)
     var id : Int = 0,
     var title : String,
     var createdAt:Date,
+
 
 
 )

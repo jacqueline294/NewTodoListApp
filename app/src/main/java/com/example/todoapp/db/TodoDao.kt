@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.todoapp.Todo
+import java.util.Date
 
 
 @Dao
@@ -17,8 +18,7 @@ interface  TodoDao {
     fun addTodo(todo: Todo)
 
     @Update
-    fun updateTodo(id: Int, todo: Todo)
-
+    fun updateTodo(todo: Todo)
     @Query("DELETE FROM todo WHERE id = :id")
     fun deleteTodo(id: Int)
 
