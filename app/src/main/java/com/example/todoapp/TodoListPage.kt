@@ -35,12 +35,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TodoListPage(viewModel: TodoViewModel){
+fun TodoListPage(navController: NavController, viewModel: TodoViewModel){
     val todoList by viewModel.todoList.observeAsState()
     var inputText by remember {
         mutableStateOf("")
@@ -112,7 +113,7 @@ fun TodoItem(item: Todo, onDelete: () -> Unit, onUpdate: (String) -> Unit) {
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = SimpleDateFormat("HH:mm:aa, dd/mm", Locale.ENGLISH).format(item.createdAt),
+                text = SimpleDateFormat("HH:mm:aa, dd/MM", Locale.ENGLISH).format(item.createdAt),
                 fontSize = 12.sp,
                 color = Color.LightGray
             )

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.todoapp.db.TodoDatabase
 
+
 class MainApplication : Application() {
     companion object {
         lateinit var todoDatabase: TodoDatabase
@@ -12,6 +13,8 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+
+        // Initialize Room database
         todoDatabase = Room.databaseBuilder(
             applicationContext,
             TodoDatabase::class.java,
@@ -19,3 +22,4 @@ class MainApplication : Application() {
         ).build()
     }
 }
+

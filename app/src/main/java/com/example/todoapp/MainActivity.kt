@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.ui.theme.TodoAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +32,9 @@ class MainActivity : ComponentActivity() {
                     modifier= Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ){
-                    TodoListPage(todoViewModel)
+                    val navController = rememberNavController()
+
+                    TodoListPage(navController, todoViewModel)
                 }
             }
         }
