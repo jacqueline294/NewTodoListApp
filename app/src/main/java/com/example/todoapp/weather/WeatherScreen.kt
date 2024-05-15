@@ -2,6 +2,7 @@ package com.example.todoapp.weather
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,10 +30,18 @@ fun WeatherScreen(navController: NavController, viewModel: WeatherViewModel = vi
                 WeatherDetails(weatherData = weatherData.value!!)
             }
             errorMessage.value != null -> {
-                Text(text = "Error: ${errorMessage.value}", style = MaterialTheme.typography.bodyLarge)
+                Column {
+                    Text(
+                        text = "Error: ${errorMessage.value}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Button(onClick = { viewModel.fetchWeatherData() }) {
+                        Text("Retry")
+                    }
+                }
             }
             else -> {
-                CircularProgressIndicator() // Shows a loading spinner while the data is being fetched
+                CircularProgressIndicator()
             }
         }
     }
