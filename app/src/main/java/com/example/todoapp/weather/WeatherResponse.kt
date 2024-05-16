@@ -1,6 +1,6 @@
 package com.example.todoapp.weather
 
-data class WeatherData(
+data class WeatherResponse(
     val main: Main,
     val weather: List<Weather>,
     val name: String
@@ -11,5 +11,7 @@ data class Main(
 )
 
 data class Weather(
+    val main: String,
     val description: String
 )
+

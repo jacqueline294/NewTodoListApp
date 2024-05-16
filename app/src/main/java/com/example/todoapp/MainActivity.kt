@@ -15,12 +15,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.ui.theme.TodoAppTheme
 import com.example.todoapp.weather.WeatherScreen
+import com.example.todoapp.weather.WeatherViewModel
+
+
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val todoViewModel = ViewModelProvider(this)[TodoViewModel::class.java]
+        val weatherViewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
 
         setContent {
             TodoAppTheme {
@@ -35,7 +39,7 @@ class MainActivity : ComponentActivity() {
                             TodoListPage(navController, todoViewModel)
                         }
                         composable("weather") {
-                            WeatherScreen(navController)
+                            WeatherScreen(weatherViewModel, navController)
                         }
                     }
                 }
