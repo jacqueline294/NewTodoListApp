@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,7 +26,6 @@ fun WeatherScreen(weatherViewModel: WeatherViewModel, navController: NavControll
         topBar = {
             TopAppBar(
                 title = { Text("Weather Checker", color = Color.White) },
-                Modifier.background(color= MaterialTheme.colorScheme.primary),
                 actions = {
                     IconButton(onClick = { navController.navigate("todoList") }) {
                         Icon(
@@ -34,7 +34,8 @@ fun WeatherScreen(weatherViewModel: WeatherViewModel, navController: NavControll
                             tint = Color.White
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors()
             )
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -70,15 +71,60 @@ fun WeatherScreen(weatherViewModel: WeatherViewModel, navController: NavControll
             Spacer(modifier = Modifier.height(20.dp))
 
             if (weatherData != null) {
-                Column(modifier = Modifier.padding(8.dp)) {
-                    Text("City: ${weatherData.name}", style = MaterialTheme.typography.titleLarge)
-                    Text("Temperature: ${weatherData.main.temp}°C", style = MaterialTheme.typography.bodyLarge)
-                    Text("Condition: ${weatherData.weather.firstOrNull()?.description ?: "N/A"}", style = MaterialTheme.typography.bodyLarge)
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = "City: ${weatherData.name}",
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = "Temperature: ${weatherData.main.temp}°C",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "Condition: ${weatherData.weather.firstOrNull()?.description ?: "N/A"}",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                imageVector = Icons.Filled.WbSunny,
+                                contentDescription = "Weather Condition Icon",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 }
-            } else if (cityName.isNotEmpty()) {
-                Text("Loading or no data available...", style = MaterialTheme.typography.bodyLarge)
             } else {
-                Text("Please enter a city name to check the weather.", style = MaterialTheme.typography.bodyLarge)
+                // States when weatherData is null
+                if (cityName.isNotEmpty()) {
+                    // cityName is entered, but no data yet (could be loading or error)
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize() // Takes up available space below the button
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    // No cityName entered yet
+                    Text(
+                        "Please enter a city name to check the weather.",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
     }
